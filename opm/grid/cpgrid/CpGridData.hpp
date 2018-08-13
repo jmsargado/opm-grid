@@ -117,8 +117,9 @@ public:
         ///
         /// Due to a bug in DUNE < 2.5.2 we need to limit this when
         /// communicating. 1 is big enough for OPM as we always use
-        /// one block for all unknowns.
-        MAX_DATA_PER_CELL = 1
+        /// one block for all unknowns, but some DUNE's grid checks
+        /// actually need 2. So 2 it is.
+        MAX_DATA_PER_CELL = 2
 #else
         /// \brief The maximum data items allowed per cell (DUNE < 2.5.2)
         ///
@@ -517,7 +518,6 @@ void CpGridData::communicateCodim(DataHandle& data, CommunicationDirection dir,
         return;
     }
     Entity2IndexDataHandle<DataHandle, codim> data_wrapper(*this, data);
-    std::size_t max_interface_entries = 0;
 
 #if DUNE_VERSION_NEWER_REV(DUNE_GRID, 2, 5, 2)
     VariableSizeCommunicator<> comm(ccobj_, interface);
@@ -528,6 +528,7 @@ void CpGridData::communicateCodim(DataHandle& data, CommunicationDirection dir,
     // For this we calculate an upper barrier of the number of
     // data items to be send manually and use it to construct a
     // VariableSizeCommunicator with sufficient buffer.
+    std::size_t max_interface_entries = 0;
 #ifndef NDEBUG
     std::size_t max_items = 0;
 #endif
