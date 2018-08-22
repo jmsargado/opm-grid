@@ -77,6 +77,7 @@ macro (config_hook)
 	opm_need_version_of ("dune-common")
 	opm_need_version_of ("dune-geometry")
 	opm_need_version_of ("dune-grid")
+	opm_need_version_of ("dune-fem")
 	find_file(_HAVE_DUNE_GRID_CHECKS checkpartition.cc HINTS ${dune-grid_INCLUDE_DIR}
 		PATH_SUFFIXES dune/grid/test)
 	if(_HAVE_DUNE_GRID_CHECKS)
